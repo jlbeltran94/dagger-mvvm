@@ -40,6 +40,7 @@ class UpdateActivity: AppCompatActivity(){
         todo = intent.getParcelableExtra("todo")
         updateViewModel.changeTodo(todo)
         updateViewModel.todo.observe(this, Observer {
+            todo = it ?: throw Throwable("Null todo")
             editTodoDescription.editText?.setText(it?.description)
         })
 

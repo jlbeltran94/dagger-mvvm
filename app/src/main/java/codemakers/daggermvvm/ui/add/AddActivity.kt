@@ -29,6 +29,7 @@ class AddActivity : AppCompatActivity(){
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        title = "Agregar Tarea"
         AndroidInjection.inject(this)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_add)
     }
