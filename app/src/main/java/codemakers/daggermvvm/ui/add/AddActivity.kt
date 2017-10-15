@@ -7,6 +7,7 @@ import android.util.Log
 import codemakers.daggermvvm.R
 import codemakers.daggermvvm.data.model.Todo
 import codemakers.daggermvvm.databinding.ActivityAddBinding
+import codemakers.daggermvvm.ui.LifeDisposable
 import codemakers.daggermvvm.util.text
 import codemakers.daggermvvm.util.validateForm
 import com.jakewharton.rxbinding2.view.clicks
@@ -22,17 +23,21 @@ class AddActivity : AppCompatActivity(){
 
     @Inject
     lateinit var addViewModel:AddViewModel
-
     lateinit var binding: ActivityAddBinding
+    val dis: LifeDisposable = LifeDisposable(this)
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AndroidInjection.inject(this)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_add)
+    }
 
+    override fun onResume() {
+        super.onResume()
 
-        addTodo.clicks()
-                .flatMap { validateForm("Verifica los campos", addTodoName.text(), addTodoDescription.text()) }
+        dis add addTodo.clicks()
+                .flatMap { validateForm(getString(R.string.requiredFields), addTodoName.text(), addTodoDescription.text()) }
                 .flatMap {
                     addViewModel.insert(it[0],it[1]) }
                 .subscribeBy(
@@ -40,7 +45,6 @@ class AddActivity : AppCompatActivity(){
                             finish()
                         }
                 )
-
     }
 
 

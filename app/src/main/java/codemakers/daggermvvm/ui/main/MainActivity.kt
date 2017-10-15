@@ -15,6 +15,7 @@ import android.arch.lifecycle.ViewModelProvider
 import android.databinding.DataBindingUtil
 import android.util.Log
 import codemakers.daggermvvm.databinding.ActivityMainBinding
+import codemakers.daggermvvm.ui.LifeDisposable
 import codemakers.daggermvvm.ui.add.AddActivity
 import codemakers.daggermvvm.ui.update.UpdateActivity
 import codemakers.daggermvvm.util.snackBarAction
@@ -39,11 +40,18 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityMainBinding
 
+    val dis: LifeDisposable = LifeDisposable(this)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AndroidInjection.inject(this)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.recycler.adapter = adapter
+
+    }
+
+    override fun onResume() {
+        super.onResume()
         mainViewModel.listTodo()
                 .subscribeBy(
                         onNext = {
@@ -51,29 +59,26 @@ class MainActivity : AppCompatActivity() {
                         }
                 )
 
-        goToAdd.clicks()
+        dis add  goToAdd.clicks()
                 .subscribeBy(
                         onNext = {
                             goToAdd()
                         }
                 )
 
-        adapter.todoDeleted
+        dis add adapter.todoDeleted
                 .flatMap { todo -> mainViewModel.removeTodo(todo).map { todo } }
                 .flatMap { snackBarAction(contentView!!,getString(R.string.todoDeleted), getString(R.string.undo), it) }
                 .flatMap { mainViewModel.recoverTodo(it) }
                 .subscribe()
 
-        adapter.todoSelected
+        dis add adapter.todoSelected
+                .applySchedulers()
                 .subscribeBy(
                         onNext = {
                             goToUpdate(it)
                         }
                 )
-
-
-
-
     }
 
     fun goToAdd(){

@@ -20,10 +20,10 @@ fun ViewGroup.inflate(layout: Int) = LayoutInflater.from(context).inflate(layout
 
 fun TextInputLayout.text():String = editText?.text.toString()
 
-fun AppCompatActivity.validateForm(message: String, title: String?, description: String?) : Observable<List<String>>{
-    if (!title.isNullOrBlank() && !description.isNullOrBlank()){
+fun AppCompatActivity.validateForm(message: String, vararg fields: String) : Observable<List<String>>{
+    if (!fields.contains("")){
         return Observable.create {
-            it.onNext(listOf(title!!, description!!))
+            it.onNext(fields.toList())
         }
     }
     toast(message)

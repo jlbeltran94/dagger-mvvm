@@ -1,5 +1,6 @@
 package codemakers.daggermvvm.ui.update
 
+import android.arch.lifecycle.Observer
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -8,9 +9,14 @@ import codemakers.daggermvvm.R
 import codemakers.daggermvvm.data.dao.TodoDao
 import codemakers.daggermvvm.data.model.Todo
 import codemakers.daggermvvm.databinding.ActivityEditBinding
+import codemakers.daggermvvm.ui.LifeDisposable
 import codemakers.daggermvvm.util.text
+import codemakers.daggermvvm.util.validateForm
+import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.widget.text
 import dagger.android.AndroidInjection
+import io.reactivex.Observable
+import io.reactivex.rxkotlin.subscribeBy
 import kotlinx.android.synthetic.main.activity_edit.*
 import javax.inject.Inject
 
@@ -20,17 +26,38 @@ import javax.inject.Inject
 class UpdateActivity: AppCompatActivity(){
 
     @Inject
-    lateinit var dao: TodoDao
+    lateinit var updateViewModel : UpdateViewModel
     lateinit var todo: Todo
     lateinit var binding: ActivityEditBinding
+    val dis: LifeDisposable = LifeDisposable(this)
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AndroidInjection.inject(this)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_edit)
-        todo = savedInstanceState?.get("todo") as Todo
-        editTodoDescription.editText?.text = todo.description as Editable
+        todo = intent.getParcelableExtra("todo")
+        updateViewModel.changeTodo(todo)
+        updateViewModel.todo.observe(this, Observer {
+            editTodoDescription.editText?.setText(it?.description)
+        })
 
     }
+
+    override fun onResume() {
+        super.onResume()
+
+        dis add saveTodo.clicks()
+                .flatMap { validateForm(getString(R.string.requiredFields), editTodoDescription.text()) }
+                .flatMap {
+                    todo.description = it[0]
+                    updateViewModel.changeTodo(todo)
+                    updateViewModel.updateTodo(todo)
+                }
+                .subscribe { finish() }
+    }
+
+
 
 }
