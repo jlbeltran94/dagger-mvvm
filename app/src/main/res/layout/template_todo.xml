@@ -48,7 +48,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.1"
                     android:src="@drawable/ic_close"
-                    android:onClick="@{()->clickDelete.onNext(todo)}"/>
+                    android:onClick="@{()->clickDelete.onNext(todo)}"
+                    android:contentDescription="@string/todoDeleted" />
             </LinearLayout>
             <TextView
                 android:id="@+id/todoDate"
