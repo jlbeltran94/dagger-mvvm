@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">DaggerMVVM</string>
+    <string name="todoDeleted">Actividad Eliminada</string>
+    <string name="undo">Deshacer</string>
 </resources>

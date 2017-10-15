@@ -27,7 +27,7 @@
             android:layout_margin="8dp"
             android:src="@drawable/ic_add"
             app:fabSize="normal"
-            android:layout_gravity="bottom|right"/>
+            android:layout_gravity="bottom|right"/>z
     </FrameLayout>
 
 

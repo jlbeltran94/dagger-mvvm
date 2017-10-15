@@ -13,13 +13,17 @@ import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 import android.arch.lifecycle.ViewModelProvider
 import android.databinding.DataBindingUtil
+import android.util.Log
 import codemakers.daggermvvm.databinding.ActivityMainBinding
 import codemakers.daggermvvm.ui.add.AddActivity
+import codemakers.daggermvvm.ui.update.UpdateActivity
+import codemakers.daggermvvm.util.snackBarAction
 import com.jakewharton.rxbinding2.view.clicks
 import dagger.android.AndroidInjection
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
+import org.jetbrains.anko.contentView
 import org.jetbrains.anko.startActivity
 import javax.inject.Inject
 
@@ -46,15 +50,38 @@ class MainActivity : AppCompatActivity() {
                             adapter.todos = it
                         }
                 )
+
         goToAdd.clicks()
                 .subscribeBy(
                         onNext = {
-                            startActivity<AddActivity>()
+                            goToAdd()
+                        }
+                )
+
+        adapter.todoDeleted
+                .flatMap { todo -> mainViewModel.removeTodo(todo).map { todo } }
+                .flatMap { snackBarAction(contentView!!,getString(R.string.todoDeleted), getString(R.string.undo), it) }
+                .flatMap { mainViewModel.recoverTodo(it) }
+                .subscribe()
+
+        adapter.todoSelected
+                .subscribeBy(
+                        onNext = {
+                            goToUpdate(it)
                         }
                 )
 
 
 
+
+    }
+
+    fun goToAdd(){
+        startActivity<AddActivity>()
+    }
+
+    fun goToUpdate(todo: Todo){
+        startActivity<UpdateActivity>("todo" to todo)
     }
 
 }
