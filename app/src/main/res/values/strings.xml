@@ -3,4 +3,6 @@
     <string name="todoDeleted">Actividad Eliminada</string>
     <string name="undo">Deshacer</string>
     <string name="requiredFields">Verifica los campos</string>
+    <string name="addTodo">Agregar Tarea</string>
+    <string name="todos">Tareas</string>
 </resources>

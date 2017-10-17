@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        title = "Tareas"
+        title = getString(R.string.todos)
         AndroidInjection.inject(this)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.recycler.adapter = adapter
@@ -69,8 +69,8 @@ class MainActivity : AppCompatActivity() {
 
         dis add adapter.todoDeleted
                 .flatMap { todo -> mainViewModel.removeTodo(todo).map { todo } }
-                .flatMap { snackBarAction(contentView!!,getString(R.string.todoDeleted), getString(R.string.undo), it) }
-                .flatMap { mainViewModel.recoverTodo(it) }
+                .flatMap { snackBarAction(contentView!!,R.string.todoDeleted, R.string.undo, it) }
+                .flatMap { mainViewModel.recoverTodo(it as Todo) }
                 .subscribe()
 
         dis add adapter.todoSelected

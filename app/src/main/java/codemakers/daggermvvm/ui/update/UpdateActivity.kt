@@ -41,7 +41,8 @@ class UpdateActivity: AppCompatActivity(){
         updateViewModel.changeTodo(todo)
         updateViewModel.todo.observe(this, Observer {
             todo = it ?: throw Throwable("Null todo")
-            editTodoDescription.editText?.setText(it?.description)
+            editTodoDescription.editText?.setText(it.description)
+            title = it.title
         })
 
     }
@@ -50,7 +51,7 @@ class UpdateActivity: AppCompatActivity(){
         super.onResume()
 
         dis add saveTodo.clicks()
-                .flatMap { validateForm(getString(R.string.requiredFields), editTodoDescription.text()) }
+                .flatMap { validateForm(R.string.requiredFields, editTodoDescription.text()) }
                 .flatMap {
                     todo.description = it[0]
                     updateViewModel.changeTodo(todo)

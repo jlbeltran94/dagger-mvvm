@@ -29,7 +29,7 @@ class AddActivity : AppCompatActivity(){
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        title = "Agregar Tarea"
+        title = getString(R.string.addTodo)
         AndroidInjection.inject(this)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_add)
     }
@@ -38,7 +38,7 @@ class AddActivity : AppCompatActivity(){
         super.onResume()
 
         dis add addTodo.clicks()
-                .flatMap { validateForm(getString(R.string.requiredFields), addTodoName.text(), addTodoDescription.text()) }
+                .flatMap { validateForm(R.string.requiredFields, addTodoName.text(), addTodoDescription.text()) }
                 .flatMap {
                     addViewModel.insert(it[0],it[1]) }
                 .subscribeBy(

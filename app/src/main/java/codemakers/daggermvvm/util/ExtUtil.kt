@@ -16,31 +16,31 @@ import org.jetbrains.anko.toast
 /**
  * Created by jlbeltran94 on 13/10/17.
  */
-fun ViewGroup.inflate(layout: Int) = LayoutInflater.from(context).inflate(layout, this, false)
+fun ViewGroup.inflate(layout: Int) = LayoutInflater.from(context)
+        .inflate(layout, this, false)
 
 fun TextInputLayout.text():String = editText?.text.toString()
 
-fun AppCompatActivity.validateForm(message: String, vararg fields: String) : Observable<List<String>>{
-    if (!fields.contains("")){
-        return Observable.create {
-            it.onNext(fields.toList())
-        }
+fun AppCompatActivity.validateForm(message: Int,
+                                   vararg fields: String) : Observable<List<String>>
+        = Observable.create<List<String>>{
+        if(fields.contains("")) toast(message)
+        else it.onNext(fields.toList())
+        it.onComplete()
     }
-    toast(message)
-    return Observable.create {  }
-}
 
-fun AppCompatActivity.snackBarAction(container: View, message: String, button: String, todo: Todo): Observable<Todo>?{
 
-    val recover = PublishSubject.create<Todo>()
-
-    Snackbar.make(container,message,Snackbar.LENGTH_LONG)
-            .setAction(button, {
-                recover.onNext(todo)
-            } )
-            .show()
-
-    return recover
-}
+fun AppCompatActivity.snackBarAction(container: View,
+                                     message: Int,
+                                     button: Int,
+                                     obj: Any) : Observable<Any>
+        = Observable.create<Any> { emitter->
+        Snackbar.make(container,message,Snackbar.LENGTH_LONG)
+                .setAction(button, {
+                    emitter.onNext(obj)
+                    emitter.onComplete()
+                } )
+                .show()
+    }
 
 
