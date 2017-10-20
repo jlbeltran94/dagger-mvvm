@@ -9,6 +9,7 @@ import codemakers.daggermvvm.R
 import codemakers.daggermvvm.data.dao.TodoDao
 import codemakers.daggermvvm.data.model.Todo
 import codemakers.daggermvvm.databinding.ActivityEditBinding
+import codemakers.daggermvvm.di.Injectable
 import codemakers.daggermvvm.ui.LifeDisposable
 import codemakers.daggermvvm.util.text
 import codemakers.daggermvvm.util.validateForm
@@ -23,7 +24,7 @@ import javax.inject.Inject
 /**
  * Created by jlbeltran94 on 13/10/17.
  */
-class UpdateActivity: AppCompatActivity(){
+class UpdateActivity: AppCompatActivity(), Injectable{
 
     @Inject
     lateinit var updateViewModel : UpdateViewModel
@@ -35,15 +36,10 @@ class UpdateActivity: AppCompatActivity(){
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        AndroidInjection.inject(this)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_edit)
         todo = intent.getParcelableExtra("todo")
-        updateViewModel.changeTodo(todo)
-        updateViewModel.todo.observe(this, Observer {
-            todo = it ?: throw Throwable("Null todo")
-            editTodoDescription.editText?.setText(it.description)
-            title = it.title
-        })
+        title = todo.title
+        editTodoDescription.editText?.setText(todo.description)
 
     }
 
@@ -54,7 +50,6 @@ class UpdateActivity: AppCompatActivity(){
                 .flatMap { validateForm(R.string.requiredFields, editTodoDescription.text()) }
                 .flatMap {
                     todo.description = it[0]
-                    updateViewModel.changeTodo(todo)
                     updateViewModel.updateTodo(todo)
                 }
                 .subscribe { finish() }

@@ -2,6 +2,7 @@ package codemakers.daggermvvm
 
 import android.app.Activity
 import android.app.Application
+import codemakers.daggermvvm.di.AppInjector
 import codemakers.daggermvvm.di.component.AppComponent
 import codemakers.daggermvvm.di.component.DaggerAppComponent
 import dagger.android.AndroidInjector
@@ -20,14 +21,10 @@ class App: Application(), HasActivityInjector {
     override fun activityInjector(): AndroidInjector<Activity>
             = injector
 
-    val appComponent: AppComponent by lazy {
-        DaggerAppComponent.builder()
-                .applicacion(this)
-                .build()
-    }
+
 
     override fun onCreate() {
         super.onCreate()
-        appComponent.inject(this)
+        AppInjector.init(this)
     }
 }

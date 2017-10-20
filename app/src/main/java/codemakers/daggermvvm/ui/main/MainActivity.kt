@@ -15,9 +15,11 @@ import android.arch.lifecycle.ViewModelProvider
 import android.databinding.DataBindingUtil
 import android.util.Log
 import codemakers.daggermvvm.databinding.ActivityMainBinding
+import codemakers.daggermvvm.di.Injectable
 import codemakers.daggermvvm.ui.LifeDisposable
 import codemakers.daggermvvm.ui.add.AddActivity
 import codemakers.daggermvvm.ui.update.UpdateActivity
+import codemakers.daggermvvm.util.buildViewModel
 import codemakers.daggermvvm.util.snackBarAction
 import com.jakewharton.rxbinding2.view.clicks
 import dagger.android.AndroidInjection
@@ -30,10 +32,11 @@ import javax.inject.Inject
 
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), Injectable {
 
     @Inject
-    lateinit var mainViewModel: MainViewModel
+    lateinit var factory: ViewModelProvider.Factory
+    val mainViewModel: MainViewModel by lazy { buildViewModel(factory, MainViewModel::class) }
 
     @Inject
     lateinit var adapter:TodoAdapter
@@ -45,7 +48,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         title = getString(R.string.todos)
-        AndroidInjection.inject(this)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.recycler.adapter = adapter
 

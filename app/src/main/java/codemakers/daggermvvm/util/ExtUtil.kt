@@ -1,5 +1,8 @@
 package codemakers.daggermvvm.util
 
+import android.arch.lifecycle.ViewModel
+import android.arch.lifecycle.ViewModelProvider
+import android.arch.lifecycle.ViewModelProviders
 import android.support.design.widget.Snackbar
 import android.support.design.widget.TextInputLayout
 import android.support.v7.app.AppCompatActivity
@@ -12,6 +15,7 @@ import io.reactivex.Observable
 import io.reactivex.ObservableEmitter
 import io.reactivex.subjects.PublishSubject
 import org.jetbrains.anko.toast
+import kotlin.reflect.KClass
 
 /**
  * Created by jlbeltran94 on 13/10/17.
@@ -24,8 +28,7 @@ fun TextInputLayout.text():String = editText?.text.toString()
 fun AppCompatActivity.validateForm(message: Int,
                                    vararg fields: String) : Observable<List<String>>
         = Observable.create<List<String>>{
-        if(fields.contains("")) toast(message)
-        else it.onNext(fields.toList())
+        if(fields.contains("")) toast(message) else it.onNext(fields.toList())
         it.onComplete()
     }
 
@@ -42,5 +45,9 @@ fun AppCompatActivity.snackBarAction(container: View,
                 } )
                 .show()
     }
+
+fun <T:ViewModel> AppCompatActivity.buildViewModel(factory: ViewModelProvider.Factory, kClass: KClass<T>):T
+        = ViewModelProviders.of(this, factory).get(kClass.java)
+
 
 

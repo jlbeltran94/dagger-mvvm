@@ -14,12 +14,6 @@ import javax.inject.Inject
  */
 class UpdateViewModel @Inject constructor(val dao: TodoDao) : ViewModel(){
 
-    var todo : MutableLiveData<Todo> = MutableLiveData()
-
-    fun changeTodo(todo: Todo){
-        this.todo.value = todo
-    }
-
     fun updateTodo(todo: Todo): Observable<Unit> =
             ObservableFromCallable{ dao.update(todo) }
                     .applySchedulers()

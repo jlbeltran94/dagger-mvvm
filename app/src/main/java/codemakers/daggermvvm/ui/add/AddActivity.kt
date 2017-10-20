@@ -7,6 +7,7 @@ import android.util.Log
 import codemakers.daggermvvm.R
 import codemakers.daggermvvm.data.model.Todo
 import codemakers.daggermvvm.databinding.ActivityAddBinding
+import codemakers.daggermvvm.di.Injectable
 import codemakers.daggermvvm.ui.LifeDisposable
 import codemakers.daggermvvm.util.text
 import codemakers.daggermvvm.util.validateForm
@@ -19,7 +20,7 @@ import javax.inject.Inject
 /**
  * Created by jlbeltran94 on 13/10/17.
  */
-class AddActivity : AppCompatActivity(){
+class AddActivity : AppCompatActivity(), Injectable{
 
     @Inject
     lateinit var addViewModel:AddViewModel
@@ -30,7 +31,6 @@ class AddActivity : AppCompatActivity(){
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         title = getString(R.string.addTodo)
-        AndroidInjection.inject(this)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_add)
     }
 

@@ -7,13 +7,16 @@ import android.view.ViewGroup
 import codemakers.daggermvvm.R
 import codemakers.daggermvvm.data.model.Todo
 import codemakers.daggermvvm.databinding.TemplateTodoBinding
+import codemakers.daggermvvm.di.ActivityScope
 import codemakers.daggermvvm.util.inflate
 import io.reactivex.subjects.PublishSubject
+import javax.inject.Inject
 
 /**
  * Created by jlbeltran94 on 13/10/17.
  */
-class TodoAdapter : RecyclerView.Adapter<TodoAdapter.TodoHolder>() {
+@ActivityScope
+class TodoAdapter @Inject constructor() : RecyclerView.Adapter<TodoAdapter.TodoHolder>() {
 
     val todoSelected = PublishSubject.create<Todo>()
     val todoDeleted = PublishSubject.create<Todo>()

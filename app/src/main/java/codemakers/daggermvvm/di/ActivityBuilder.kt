@@ -1,8 +1,5 @@
 package codemakers.daggermvvm.di
 
-import codemakers.daggermvvm.di.module.AddModule
-import codemakers.daggermvvm.di.module.MainModule
-import codemakers.daggermvvm.di.module.UpdateModule
 import codemakers.daggermvvm.ui.add.AddActivity
 import codemakers.daggermvvm.ui.main.MainActivity
 import codemakers.daggermvvm.ui.update.UpdateActivity
@@ -21,15 +18,15 @@ annotation class ActivityScope
 abstract class ActivityBuilders{
 
     @ActivityScope
-    @ContributesAndroidInjector(modules = arrayOf(MainModule::class))
+    @ContributesAndroidInjector
     abstract fun bindMainActivity(): MainActivity
 
     @ActivityScope
-    @ContributesAndroidInjector(modules = arrayOf(AddModule::class))
+    @ContributesAndroidInjector
     abstract fun bindAddActivity(): AddActivity
 
     @ActivityScope
-    @ContributesAndroidInjector(modules = arrayOf(UpdateModule::class))
+    @ContributesAndroidInjector
     abstract fun bindUpdateActivity(): UpdateActivity
 
 
