@@ -27,7 +27,7 @@ android {
 
 def support_version = '26.1.0'
 def dagger_version = '2.11'
-def arch_version = '1.0.0-beta2'
+def arch_version = '1.0.0-rc1'
 def anko_version = '0.10.1'
 
 dependencies {
